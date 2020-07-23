@@ -9,7 +9,9 @@ public class Player : MonoBehaviour
     public Camera mainCamera;
     public LineRenderer _lineRenderer;
     public DistanceJoint2D _distanceJoint;
+
     public float rocketStrength;
+    public float reelStrength;
 
     private Rigidbody2D rb;
     private Vector3 prevPos;
@@ -58,5 +60,6 @@ public class Player : MonoBehaviour
         {
             rb.AddForce(Vector3.Normalize(movementVector) * rocketStrength * -1);
         }
+        _distanceJoint.distance -= Input.mouseScrollDelta.y * reelStrength;
     }
 }
