@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using UnityEngine;
+using Photon.Pun;
+using System;
+using System.Runtime.CompilerServices;
 
 public class DrawRope : MonoBehaviour
 {
@@ -13,10 +16,15 @@ public class DrawRope : MonoBehaviour
     public float ropeSegLen = 0.3f;
     public int segmentLength = 35;
     private float lineWidth = 0.035f;
+    private float[] ropeFloatArray;
+    private bool hasPrinted = false;
+
+    private PhotonView PV;
 
     // Use this for initialization
     void Start()
     {
+        PV = GetComponent<PhotonView>();
         this.lineRenderer = this.GetComponent<LineRenderer>();
         Vector3 ropeStartPoint = StartPoint.position;
 
@@ -25,12 +33,16 @@ public class DrawRope : MonoBehaviour
             this.ropeSegments.Add(new RopeSegment(ropeStartPoint));
             ropeStartPoint.y -= ropeSegLen;
         }
+        RopeSegmentsToFloatArray(this.ropeSegments);
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-        this.Draw();
+        RopeSegmentsToFloatArray(this.ropeSegments);
+        //this.Draw(this.lineWidth, this.segmentLength, this.ropeFloatArray);
+        DrawLines();
     }
 
     private void FixedUpdate()
@@ -64,7 +76,7 @@ public class DrawRope : MonoBehaviour
             ropeSegments.Add(new RopeSegment(ropeStartPoint));
             this.segmentLength++;
         }
-
+       
     }
 
     private void Simulate()
@@ -136,31 +148,105 @@ public class DrawRope : MonoBehaviour
         }
     }
 
-    private void Draw()
+    private void RopeSegmentsToFloatArray(List<RopeSegment> ropeSegments)
     {
-        float lineWidth = this.lineWidth;
+        this.ropeFloatArray = new float[this.segmentLength * 2];
+        for (int i = 0; i < this.segmentLength * 2; i += 2)
+        {
+            ropeFloatArray[i] = ropeSegments[i / 2].posNow.x;
+            ropeFloatArray[i + 1] = ropeSegments[i / 2].posNow.y;
+            //print(ropeArray[i]);
+            //print(ropeArray[i + 1]);
+        }
+    }
+
+    private List<RopeSegment> FloatArrayToRopeSemgents(float[] floatArray) 
+    {
+        List<RopeSegment> ropeSegments = new List<RopeSegment>();
+        for (int i = 0; i < floatArray.Length; i += 2) 
+        {
+            ropeSegments.Add(new RopeSegment(new Vector3(floatArray[i], floatArray[i + 1])));
+                Debug.Log($"x: {floatArray[i]}, y: {floatArray[i + 1]}");
+                Debug.Log($"x: {this.ropeSegments[i / 2].posNow.x}, y: {this.ropeSegments[i / 2].posNow.y}");
+                Debug.Log("\n\n\n\n");
+        }
+        return ropeSegments;
+    }
+
+    [PunRPC]
+    private void Draw(float lineWidth, int segmentLength, float[] ropeSegmentsFloat)
+    {
         lineRenderer.startWidth = lineWidth;
         lineRenderer.endWidth = lineWidth;
 
-        Vector3[] ropePositions = new Vector3[this.segmentLength];
-        for (int i = 0; i < this.segmentLength; i++)
+        /*List<RopeSegment> ropeSegments = FloatArrayToRopeSemgents(ropeSegmentsFloat);
+        Vector3[] ropePositions = new Vector3[segmentLength];
+        for (int i = 0; i < segmentLength; i++)
         {
-            ropePositions[i] = this.ropeSegments[i].posNow;
+            ropePositions[i] = ropeSegments[i].posNow;
+        }*/
+        Vector3[] ropePositions = new Vector3[segmentLength];
+        for (int i = 0; i < segmentLength * 2; i += 2)
+        {
+            ropePositions[i / 2].x = ropeSegmentsFloat[i];
+            ropePositions[i / 2].y= ropeSegmentsFloat[i + 1];
         }
 
         lineRenderer.positionCount = ropePositions.Length;
         lineRenderer.SetPositions(ropePositions);
     }
 
-    public struct RopeSegment
+    private void Draw(float lineWidth, int segmentLength, List<RopeSegment> ropeSegments)
+    {
+        lineRenderer.startWidth = lineWidth;
+        lineRenderer.endWidth = lineWidth;
+
+        Vector3[] ropePositions = new Vector3[segmentLength];
+        for (int i = 0; i < segmentLength; i ++)
+        {
+            ropePositions[i] = ropeSegments[i].posNow;
+        }
+
+        lineRenderer.positionCount = ropePositions.Length;
+        lineRenderer.SetPositions(ropePositions);
+    }
+
+    public void DrawLines()
+    {
+        // Call the other party's function (in this case, RpcDrawLines function)
+        PV.RPC("Draw", RpcTarget.All, this.lineWidth, this.segmentLength, this.ropeFloatArray);
+    }
+
+    public class RopeSegment
     {
         public Vector2 posNow;
         public Vector2 posOld;
+
+
+        public RopeSegment(float x1, float y1, float x2, float y2) 
+        {
+            this.posNow.x = x1;
+            this.posNow.y = y1;
+            this.posOld.x = x2;
+            this.posOld.y = y2;
+        }
 
         public RopeSegment(Vector2 pos)
         {
             this.posNow = pos;
             this.posOld = pos;
         }
+
+        public static RopeSegment Deserialize(float[] data)
+        {
+            RopeSegment result = new RopeSegment(data[0], data[1], data[2], data[3]);
+            return result;
+        }
+        public static float[] Serialize(RopeSegment ropeSegment)
+        {
+            float[] data = { ropeSegment.posNow.x, ropeSegment.posNow.y, ropeSegment.posOld.x, ropeSegment.posOld.y };
+            return data;
+        }
+
     }
 }

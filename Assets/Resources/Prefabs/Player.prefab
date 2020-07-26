@@ -17,7 +17,6 @@ GameObject:
   - component: {fileID: 3737037965709391549}
   - component: {fileID: 3737037965709391546}
   - component: {fileID: 6827035408396991}
-  - component: {fileID: 2318038010446839329}
   - component: {fileID: 1662002863127771938}
   m_Layer: 0
   m_Name: Player
@@ -278,7 +277,7 @@ MonoBehaviour:
   StartPoint: {fileID: 3737037965709391547}
   EndPoint: {fileID: 3737037965709391547}
   ropeSegLen: 0.1
-  segmentLength: 35
+  segmentLength: 3
 --- !u!114 &6827035408396991
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -298,24 +297,10 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents:
   - {fileID: 1662002863127771938}
+  - {fileID: 0}
   viewIdField: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!114 &2318038010446839329
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3737037965709391538}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SynchronizePosition: 1
-  m_SynchronizeRotation: 1
-  m_SynchronizeScale: 0
 --- !u!114 &1662002863127771938
 MonoBehaviour:
   m_ObjectHideFlags: 0

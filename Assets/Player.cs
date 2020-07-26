@@ -122,13 +122,12 @@ public class Player : MonoBehaviour
         {
             rb.AddForce(Vector3.Normalize(movementVector) * rocketStrength * -1);
         }
-        if (Input.mouseScrollDelta.y != 0)
+        if (Input.mouseScrollDelta.y != 0 && false)
         {
             _distanceJoint.distance -= Input.mouseScrollDelta.y * reelStrength;
             int segmentLength = (int)(_distanceJoint.distance / drawRope.ropeSegLen);
             drawRope.resizeRope(segmentLength);
         }
         BoostBar.transform.localScale = new Vector3(boostGas, BoostBar.transform.localScale.y, 1);
-        print(boostGas);
     }
 }
