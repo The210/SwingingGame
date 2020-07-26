@@ -164,6 +164,8 @@ MonoBehaviour:
   reelStrength: 0.1
   maxGrappleDistance: 10
   maxMouseGrapple: 2
+  gasUsageSpeed: 0.01
+  gasRegenSpeed: 0.005
 --- !u!120 &3737037965709391549
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -328,14 +330,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_PositionModel:
     SynchronizeEnabled: 1
-    TeleportEnabled: 1
-    TeleportIfDistanceGreaterThan: 3
-    InterpolateOption: 2
-    InterpolateMoveTowardsSpeed: 1
-    InterpolateLerpSpeed: 1
+    TeleportEnabled: 0
+    TeleportIfDistanceGreaterThan: 0
+    InterpolateOption: 1
+    InterpolateMoveTowardsSpeed: 1000
+    InterpolateLerpSpeed: 10000
     ExtrapolateOption: 2
     ExtrapolateSpeed: 1
-    ExtrapolateIncludingRoundTripTime: 1
+    ExtrapolateIncludingRoundTripTime: 0
     ExtrapolateNumberOfStoredPositions: 1
   m_RotationModel:
     SynchronizeEnabled: 0
@@ -343,7 +345,7 @@ MonoBehaviour:
     InterpolateRotateTowardsSpeed: 180
     InterpolateLerpSpeed: 5
   m_ScaleModel:
-    SynchronizeEnabled: 0
+    SynchronizeEnabled: 1
     InterpolateOption: 0
     InterpolateMoveTowardsSpeed: 1
     InterpolateLerpSpeed: 0

@@ -16,6 +16,8 @@ public class Player : MonoBehaviour
     public float reelStrength;
     public float maxGrappleDistance;
     public float maxMouseGrapple;
+    public float gasUsageSpeed;
+    public float gasRegenSpeed;
 
     private Rigidbody2D rb;
     private DrawRope drawRope;
@@ -23,6 +25,10 @@ public class Player : MonoBehaviour
     private Vector3 movementVector;
     private Camera mainCamera;
     private GameObject grapplePoints;
+    private float boostGas = 1f;
+    private GameObject BoostEncapsulator;
+    private GameObject BoostBar;
+    private bool boostOnCooldown = false;
 
     private PhotonView PV;
 
@@ -37,6 +43,8 @@ public class Player : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         drawRope = GetComponent<DrawRope>();
         _lineRenderer.enabled = false;
+        BoostEncapsulator = GameObject.Find("BoostBar");
+        BoostBar = BoostEncapsulator.transform.GetChild(1).gameObject;
     }
 
     // Update is called once per frame
@@ -50,6 +58,11 @@ public class Player : MonoBehaviour
 
     void Movement() 
     {
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            transform.position = new Vector3(0, 0, 0);
+            rb.velocity = new Vector3(0, 0, 0);
+        }
         if (Input.GetKeyDown(KeyCode.Space))
         {
             Transform grappled = null;
@@ -89,9 +102,21 @@ public class Player : MonoBehaviour
     {
         movementVector = this.transform.position - prevPos;
         prevPos = this.transform.position;
-        if (Input.GetKey(KeyCode.Mouse0))
+        boostGas += gasRegenSpeed;
+        if (boostGas >= 1)
+        {
+            boostGas = 1;
+            boostOnCooldown = false;
+        }
+        if (boostGas <= 0) 
+        {
+            boostGas = 0;
+            boostOnCooldown = true;
+        }
+        if (Input.GetKey(KeyCode.Mouse0) && boostGas > 0 && !boostOnCooldown)
         {
             rb.AddForce(Vector3.Normalize(movementVector) * rocketStrength);
+            boostGas -= gasUsageSpeed;
         }
         if (Input.GetKey(KeyCode.Mouse1))
         {
@@ -103,6 +128,7 @@ public class Player : MonoBehaviour
             int segmentLength = (int)(_distanceJoint.distance / drawRope.ropeSegLen);
             drawRope.resizeRope(segmentLength);
         }
-
+        BoostBar.transform.localScale = new Vector3(boostGas, BoostBar.transform.localScale.y, 1);
+        print(boostGas);
     }
 }
