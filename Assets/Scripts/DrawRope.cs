@@ -177,8 +177,10 @@ public class DrawRope : MonoBehaviour
     [PunRPC]
     private void Draw(float lineWidth, int segmentLength, float[] ropeSegmentsFloat)
     {
-        this.lineRenderer.startWidth = lineWidth;
-        this.lineRenderer.endWidth = lineWidth;
+        GameObject player = GameObject.Find("Players").transform.GetChild(1).gameObject;
+        LineRenderer lineRenderer = player.GetComponent<LineRenderer>();
+        lineRenderer.startWidth = lineWidth;
+        lineRenderer.endWidth = lineWidth;
 
         /*List<RopeSegment> ropeSegments = FloatArrayToRopeSemgents(ropeSegmentsFloat);
         Vector3[] ropePositions = new Vector3[segmentLength];
@@ -193,8 +195,8 @@ public class DrawRope : MonoBehaviour
             ropePositions[i / 2].y= ropeSegmentsFloat[i + 1];
         }
 
-        this.lineRenderer.positionCount = ropePositions.Length;
-        this.lineRenderer.SetPositions(ropePositions);
+        lineRenderer.positionCount = ropePositions.Length;
+        lineRenderer.SetPositions(ropePositions);
     }
 
     private void Draw(float lineWidth, int segmentLength, List<RopeSegment> ropeSegments)
