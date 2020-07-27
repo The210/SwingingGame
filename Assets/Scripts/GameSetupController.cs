@@ -6,6 +6,7 @@ using System.IO;
 
 public class GameSetupController : MonoBehaviour
 {
+
     // Start is called before the first frame update
     void Start()
     {
@@ -15,7 +16,7 @@ public class GameSetupController : MonoBehaviour
     private void CreatePlayer()
     {
         Debug.Log("Creating Player");
-            PhotonNetwork.Instantiate(Path.Combine("Prefabs",
+        PhotonNetwork.Instantiate(Path.Combine("Prefabs",
                     "Player"), Vector3.zero, Quaternion.identity);
     }
 }

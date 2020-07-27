@@ -37,6 +37,7 @@ public class Player : MonoBehaviour
     {
         PV = GetComponent<PhotonView>();
 
+        transform.SetParent(GameObject.Find("Players").transform);
         grapplePoints = GameObject.Find("GrapplePoints");
         mainCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
         _distanceJoint.enabled = false;
