@@ -34,7 +34,6 @@ public class MovingCoin : MonoBehaviour
             direction.Normalize();
             timeSinceChange = 0;
         }
-        print(direction);
         transform.position += direction * speed;
         timeRemaining -= Time.deltaTime;
         if (timeRemaining <= 0)
