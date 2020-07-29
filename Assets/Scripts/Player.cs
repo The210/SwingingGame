@@ -23,6 +23,7 @@ public class Player : MonoBehaviour
     public float brakeRegenSpeed;
     public float groundSpeed;
     public float dashSpeed;
+    public float dashDistance;
 
 
     private Rigidbody2D rb;
@@ -41,6 +42,17 @@ public class Player : MonoBehaviour
     private bool brakeOnCooldown = false;
     public bool isDashing = false;
     private Vector3 mPos;
+
+    public float dashStrength;
+    public float dashCooldown;
+    private bool dashOnCooldown;
+    private float dashCounter = 0f;
+    private Vector2 dashPoint;
+
+    private bool e = false;
+    private bool space = false;
+    private bool mouse1 = false;
+    private bool w = false;
 
     private Text scoreText;
     private int score = 0;
@@ -122,7 +134,9 @@ public class Player : MonoBehaviour
         {
             _lineRenderer.SetPosition(1, transform.position);
         }
-    
+        ManageInputs();
+        
+
     }
 
     void FixedUpdate() 
@@ -131,12 +145,12 @@ public class Player : MonoBehaviour
         movementVector = this.transform.position - prevPos;
         prevPos = this.transform.position;
         ManageMeters();
-        if (Input.GetKey(KeyCode.Space) && boostGas > 0 && !boostOnCooldown && _distanceJoint.enabled)
+        if (space && boostGas > 0 && !boostOnCooldown)
         {
             rb.AddForce(Vector3.Normalize(movementVector) * rocketStrength);
             boostGas -= gasUsageSpeed;
         }
-        if (Input.GetKey(KeyCode.Mouse1) && brakeGas > 0 && !brakeOnCooldown)
+        if (mouse1 && brakeGas > 0 && !brakeOnCooldown)
         {
             rb.AddForce(Vector3.Normalize(movementVector) * rocketStrength * -1);
             brakeGas -= brakeUsageSpeed;
@@ -147,13 +161,27 @@ public class Player : MonoBehaviour
             int segmentLength = (int)(_distanceJoint.distance / drawRope.ropeSegLen);
             drawRope.resizeRope(segmentLength);
         }
-        if (Input.GetKeyDown(KeyCode.E))
+        if (e && !dashOnCooldown)
         {
-            Debug.Log("enters");
+            e = false;
             float magnitude = rb.velocity.magnitude;
             mPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            rb.velocity = Vector2.zero;
+            dashPoint = transform.position + ((mPos - transform.position).normalized) * dashDistance;
             rb.velocity = (mPos - transform.position).normalized * magnitude;
-            //isDashing = true;
+            rb.AddForce(rb.velocity.normalized * dashStrength);
+            dashOnCooldown = true;
+            isDashing = true;
+        }
+        if (dashOnCooldown)
+        {
+            e = false;
+            dashCounter += Time.deltaTime;
+            if (dashCounter >= dashCooldown)
+            {
+                dashCounter = 0;
+                dashOnCooldown = false;
+            }
         }
         if (!_distanceJoint.enabled)
         {
@@ -165,19 +193,19 @@ public class Player : MonoBehaviour
 
                 rb.AddForce(movement * groundSpeed);
             
-                if (Input.GetKeyDown(KeyCode.Space))
+                if (w)
                 {
+                    w = false;
                     rb.AddForce(new Vector2(0f, 10f), ForceMode2D.Impulse);
                 }
             }
             if (isDashing)
             {
-                
-                if (Vector2.Distance(transform.position, mPos) < 1f)
+                transform.position = Vector2.MoveTowards(transform.position, dashPoint, dashSpeed);
+                if (Vector2.Distance(transform.position, dashPoint) < 1f)
                 {
                     isDashing = false;
                 }
-                transform.position = Vector2.MoveTowards(transform.position, mPos, dashSpeed);
 
             }
         }
@@ -210,6 +238,35 @@ public class Player : MonoBehaviour
             brakeOnCooldown = true;
         }
 
+    }
+
+    private void ManageInputs()
+    {
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            Debug.Log("E was pressed");
+            e = true;
+        }
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            w = true;
+        }
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            space = true;
+        }
+        if (Input.GetKeyDown(KeyCode.Mouse1))
+        {
+            mouse1 = true;
+        }
+        if (Input.GetKeyUp(KeyCode.Space))
+        {
+            space = false;
+        }
+        if (Input.GetKeyUp(KeyCode.Mouse1))
+        {
+            mouse1 = false;
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
