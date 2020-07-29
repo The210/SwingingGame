@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Coin : MonoBehaviour
 {
-
     public float coinLifeSpan;
     private float timeRemaining;
     private SpriteRenderer coinSprite;

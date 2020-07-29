@@ -180,5 +180,10 @@ public class Player : MonoBehaviour
             score += 1;
             Destroy(collision.gameObject);
         }
+        if (collision.tag == "movingCoin")
+        {
+            score += 3;
+            Destroy(collision.gameObject);
+        }
     }
 }

@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Grapple
   - coin
+  - movingCoin
   layers:
   - Default
   - TransparentFX

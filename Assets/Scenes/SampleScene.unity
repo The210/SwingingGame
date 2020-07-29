@@ -3578,6 +3578,12 @@ PrefabInstance:
       propertyPath: timeBetweenSpawns
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 4842234013913311773, guid: dca019c3e1eea834ba355defb0b74add,
+        type: 3}
+      propertyPath: movingCoin
+      value: 
+      objectReference: {fileID: 879977056592221317, guid: 0a8fa3d065a03464fb618db1517dab66,
+        type: 3}
     - target: {fileID: 5454923232674076852, guid: dca019c3e1eea834ba355defb0b74add,
         type: 3}
       propertyPath: m_Name
