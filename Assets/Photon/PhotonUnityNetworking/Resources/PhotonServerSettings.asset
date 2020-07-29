@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AppSettings:
     AppIdRealtime: 88b81717-adc9-4e22-9743-c676552c3366
-    AppIdChat: 9bf992ec-3a61-407b-a65f-956e985b94c7
+    AppIdChat: 
     AppIdVoice: 
     AppVersion: 
     UseNameServer: 1
@@ -27,7 +27,7 @@ MonoBehaviour:
     AuthMode: 0
     EnableLobbyStatistics: 0
     NetworkLogging: 1
-  DevRegion: usw
+  DevRegion: eu
   PunLogging: 0
   EnableSupportLogger: 0
   RunInBackground: 1
@@ -36,9 +36,9 @@ MonoBehaviour:
   - ClickRpc
   - DestroyRpc
   - DestroySpaceship
+  - Draw
   - Fire
   - RespawnSpaceship
-  - Draw
   DisableAutoOpenWizard: 1
-  ShowSettings: 1
+  ShowSettings: 0
   DevRegionSetOnce: 1

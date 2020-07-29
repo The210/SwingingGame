@@ -296,6 +296,7 @@ MonoBehaviour:
   gasRegenSpeed: 0.008
   brakeUsageSpeed: 0.01
   brakeRegenSpeed: 0.008
+  groundSpeed: 0
 --- !u!120 &3737037965709391549
 LineRenderer:
   m_ObjectHideFlags: 0

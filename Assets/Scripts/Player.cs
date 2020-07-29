@@ -21,6 +21,9 @@ public class Player : MonoBehaviour
     public float gasRegenSpeed;
     public float brakeUsageSpeed;
     public float brakeRegenSpeed;
+    public float groundSpeed;
+    public float dashSpeed;
+
 
     private Rigidbody2D rb;
     private DrawRope drawRope;
@@ -36,6 +39,8 @@ public class Player : MonoBehaviour
     private GameObject BrakeBar;
     private bool boostOnCooldown = false;
     private bool brakeOnCooldown = false;
+    public bool isDashing = false;
+    private Vector3 mPos;
 
     private Text scoreText;
     private int score = 0;
@@ -50,7 +55,6 @@ public class Player : MonoBehaviour
     void Start()
     {
         PV = GetComponent<PhotonView>();
-
         transform.SetParent(GameObject.Find("Players").transform);
         grapplePoints = GameObject.Find("GrapplePoints");
         mainCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
@@ -70,7 +74,7 @@ public class Player : MonoBehaviour
     void Update()
     {
         scoreText.text = "Score: " + score;
-        if (PV.IsMine)
+       // if (PV.IsMine)
             Movement();
         if (Input.GetKeyDown(KeyCode.Escape))
             Application.Quit();
@@ -98,7 +102,7 @@ public class Player : MonoBehaviour
         if (closestMouseGrapple < maxMouseGrapple)
         {
             grappled.GetComponent<SpriteRenderer>().color = new Color(255, 255, 0, 1);
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.Mouse0))
             {
                 drawRope.segmentLength = (int)(Vector3.Distance(this.transform.position, grappled.position) / (drawRope.ropeSegLen * 2));
                 drawRope.reInitializeRope();
@@ -108,7 +112,7 @@ public class Player : MonoBehaviour
                 _lineRenderer.enabled = true;
             }
         }
-        if (Input.GetKeyUp(KeyCode.Space))
+        if (Input.GetKeyUp(KeyCode.Mouse0))
         {
             drawRope.EndPoint = this.transform;
             _distanceJoint.enabled = false;
@@ -118,6 +122,7 @@ public class Player : MonoBehaviour
         {
             _lineRenderer.SetPosition(1, transform.position);
         }
+    
     }
 
     void FixedUpdate() 
@@ -126,7 +131,7 @@ public class Player : MonoBehaviour
         movementVector = this.transform.position - prevPos;
         prevPos = this.transform.position;
         ManageMeters();
-        if (Input.GetKey(KeyCode.Mouse0) && boostGas > 0 && !boostOnCooldown)
+        if (Input.GetKey(KeyCode.Space) && boostGas > 0 && !boostOnCooldown && _distanceJoint.enabled)
         {
             rb.AddForce(Vector3.Normalize(movementVector) * rocketStrength);
             boostGas -= gasUsageSpeed;
@@ -141,6 +146,40 @@ public class Player : MonoBehaviour
             _distanceJoint.distance -= Input.mouseScrollDelta.y * reelStrength;
             int segmentLength = (int)(_distanceJoint.distance / drawRope.ropeSegLen);
             drawRope.resizeRope(segmentLength);
+        }
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            Debug.Log("enters");
+            float magnitude = rb.velocity.magnitude;
+            mPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            rb.velocity = (mPos - transform.position).normalized * magnitude;
+            //isDashing = true;
+        }
+        if (!_distanceJoint.enabled)
+        {
+            if (!isDashing)
+            {
+                float moveHorizontal = Input.GetAxis("Horizontal");
+                float moveVertical = Input.GetAxis("Vertical");
+                Vector2 movement = new Vector2(moveHorizontal, 0);
+
+                rb.AddForce(movement * groundSpeed);
+            
+                if (Input.GetKeyDown(KeyCode.Space))
+                {
+                    rb.AddForce(new Vector2(0f, 10f), ForceMode2D.Impulse);
+                }
+            }
+            if (isDashing)
+            {
+                
+                if (Vector2.Distance(transform.position, mPos) < 1f)
+                {
+                    isDashing = false;
+                }
+                transform.position = Vector2.MoveTowards(transform.position, mPos, dashSpeed);
+
+            }
         }
         BoostBar.transform.localScale = new Vector3(boostGas, BoostBar.transform.localScale.y, 1);
         BrakeBar.transform.localScale = new Vector3(brakeGas, BrakeBar.transform.localScale.y, 1);
