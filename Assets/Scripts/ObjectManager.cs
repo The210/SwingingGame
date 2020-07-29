@@ -1,4 +1,4 @@
-﻿using System.Collections;   
+﻿/*using System.Collections;   
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEditor.SceneManagement;
@@ -14,4 +14,4 @@ public class ObjectManager
         objectList.Add(otherObject);
         Debug.Log("Player joined");
     }
-}
+}*/
