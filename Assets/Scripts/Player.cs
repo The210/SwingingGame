@@ -27,6 +27,7 @@ public class Player : MonoBehaviour
 
 
     private Rigidbody2D rb;
+    public GameObject dashParticles;
     private DrawRope drawRope;
     private Vector3 prevPos;
     private Vector3 movementVector;
@@ -163,6 +164,7 @@ public class Player : MonoBehaviour
         }
         if (e && !dashOnCooldown)
         {
+            //Instantiate(dashParticles, transform.position, Quaternion.identity).transform.SetParent(transform);
             e = false;
             float magnitude = rb.velocity.magnitude;
             mPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
