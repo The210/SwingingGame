@@ -117,6 +117,8 @@ public class Player : MonoBehaviour
             grappled.GetComponent<SpriteRenderer>().color = new Color(255, 255, 0, 1);
             if (Input.GetKeyDown(KeyCode.Mouse0))
             {
+                _lineRenderer.enabled = true;
+                drawRope.enabled = true;
                 drawRope.segmentLength = (int)(Vector3.Distance(this.transform.position, grappled.position) / (drawRope.ropeSegLen * 2));
                 drawRope.reInitializeRope();
                 drawRope.EndPoint = grappled;
@@ -162,7 +164,7 @@ public class Player : MonoBehaviour
             int segmentLength = (int)(_distanceJoint.distance / drawRope.ropeSegLen);
             drawRope.resizeRope(segmentLength);
         }
-        if (e && !dashOnCooldown)
+        if (e && !dashOnCooldown && !_distanceJoint.enabled)
         {
             //Instantiate(dashParticles, transform.position, Quaternion.identity).transform.SetParent(transform);
             e = false;
@@ -187,13 +189,10 @@ public class Player : MonoBehaviour
         }
         if (!_distanceJoint.enabled)
         {
+            _lineRenderer.enabled = false;
+            drawRope.enabled = false;
             if (!isDashing)
             {
-                float moveHorizontal = Input.GetAxis("Horizontal");
-                float moveVertical = Input.GetAxis("Vertical");
-                Vector2 movement = new Vector2(moveHorizontal, 0);
-
-                rb.AddForce(movement * groundSpeed);
             
                 if (w)
                 {
@@ -213,6 +212,11 @@ public class Player : MonoBehaviour
         }
         BoostBar.transform.localScale = new Vector3(boostGas, BoostBar.transform.localScale.y, 1);
         BrakeBar.transform.localScale = new Vector3(brakeGas, BrakeBar.transform.localScale.y, 1);
+        float moveHorizontal = Input.GetAxis("Horizontal");
+        float moveVertical = Input.GetAxis("Vertical");
+        Vector2 movement = new Vector2(moveHorizontal, 0);
+
+        rb.AddForce(movement * groundSpeed);
     }
 
     private void ManageMeters()
@@ -244,7 +248,7 @@ public class Player : MonoBehaviour
 
     private void ManageInputs()
     {
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.E) && !_distanceJoint.enabled)
         {
             Debug.Log("E was pressed");
             e = true;
