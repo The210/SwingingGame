@@ -19,7 +19,7 @@ public class GravityPusher : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         if (Vector3.Distance(transform.position, player.transform.position) < range)
         {
