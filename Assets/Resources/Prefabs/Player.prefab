@@ -288,7 +288,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _lineRenderer: {fileID: 3737037965709391549}
   _distanceJoint: {fileID: 3737037965709391550}
-  rocketStrength: 5
+  rocketStrength: 8
   reelStrength: 0.1
   maxGrappleDistance: 10
   maxMouseGrapple: 2
@@ -298,12 +298,12 @@ MonoBehaviour:
   brakeRegenSpeed: 0.008
   groundSpeed: 0
   dashSpeed: 1
-  dashDistance: 4
+  dashDistance: 8
   dashParticles: {fileID: 8104268140094840083, guid: a239603d9f8072e4b959c8df03118f3d,
     type: 3}
   isDashing: 0
-  dashStrength: 30
-  dashCooldown: 1.5
+  dashStrength: 40
+  dashCooldown: 1
 --- !u!120 &3737037965709391549
 LineRenderer:
   m_ObjectHideFlags: 0
