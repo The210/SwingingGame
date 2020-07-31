@@ -162,7 +162,7 @@ Transform:
   m_GameObject: {fileID: 3737037965709391538}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3, y: 3, z: 1}
+  m_LocalScale: {x: 6, y: 6, z: 1}
   m_Children:
   - {fileID: 6004845878448332408}
   m_Father: {fileID: 0}
@@ -187,7 +187,7 @@ Rigidbody2D:
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 0
 --- !u!212 &3737037965709391545
 SpriteRenderer:
@@ -248,7 +248,7 @@ DistanceJoint2D:
   m_GameObject: {fileID: 3737037965709391538}
   m_Enabled: 1
   serializedVersion: 4
-  m_EnableCollision: 0
+  m_EnableCollision: 1
   m_ConnectedRigidBody: {fileID: 0}
   m_BreakForce: Infinity
   m_BreakTorque: Infinity
@@ -296,6 +296,14 @@ MonoBehaviour:
   gasRegenSpeed: 0.008
   brakeUsageSpeed: 0.01
   brakeRegenSpeed: 0.008
+  groundSpeed: 0
+  dashSpeed: 1
+  dashDistance: 4
+  dashParticles: {fileID: 8104268140094840083, guid: a239603d9f8072e4b959c8df03118f3d,
+    type: 3}
+  isDashing: 0
+  dashStrength: 30
+  dashCooldown: 1.5
 --- !u!120 &3737037965709391549
 LineRenderer:
   m_ObjectHideFlags: 0
